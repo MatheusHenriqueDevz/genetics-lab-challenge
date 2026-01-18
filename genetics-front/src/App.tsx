@@ -45,7 +45,7 @@ function App() {
       const err = error as AxiosError;
 
       if (err.response && err.response.status === 404) {
-        console.log("Nenhum laudo salvo encontrado (isso é normal).");
+        console.log("Nenhum laudo salvo encontrado.");
       } else {
         console.error("Erro ao buscar laudo salvo", error);
       }
