@@ -33,13 +33,13 @@ Este projeto é uma aplicação Full Stack desenvolvida como parte do processo s
     * Feedback visual de carregamento (Loading states).
     * Prevenção de *Race Conditions* (Requisições antigas canceladas automaticamente).
 
-## 🛠️ Como Rodar o Projeto
+## Como Rodar o Projeto
 
 Pré-requisito: Tenha o **Node.js** instalado em sua máquina.
 
 ### 1. Clonar o repositório
 
-    git clone <URL_DO_REPOSITORIO>
+    git clone https://github.com/MatheusHenriqueDevz/genetics-lab-challenge.git
     cd genetic-lab-challange
 
 ### 2. Iniciar o Backend
@@ -60,7 +60,7 @@ Abra **outro** terminal, navegue até a pasta do frontend e rode:
 
 *Acesse a aplicação no navegador em `http://localhost:5173`*
 
-## 🧠 Decisões Técnicas e Arquiteturais
+## Decisões Técnicas e Arquiteturais
 
 * **AbortController (Frontend)**: Implementado no hook de consumo da API para cancelar requisições "stale" (antigas) caso o usuário troque de amostra rapidamente. Isso atende ao requisito crítico de consistência de estado.
 * **Repository Pattern (Backend)**: O acesso aos dados foi abstraído em uma camada de repositório (`AmostraRepository`). Isso facilita testes e permite uma futura migração de "Memória" para um banco SQL real (como PostgreSQL) sem quebrar as regras de negócio.
