@@ -30,14 +30,21 @@ app.post('/reports', laudoController.create.bind(laudoController));
 app.get('/reports/:sampleId', laudoController.get.bind(laudoController));
 
 // MOTOR
-const start = async () => {
-    try {
-        await app.listen({ port: 3333 });
-        console.log('🚀 Servidor rodando em http://localhost:3333');
-    } catch (err) {
-        app.log.error(err);
-        process.exit(1);
-    }
-};
+    app.get('/', async (request, reply) => {
+        return { 
+            api: 'Laboratório Genômico', 
+            status: 'Online', 
+            version: '1.0.0' 
+        };
+    });
+    const start = async () => {
+        try {
+            await app.listen({ port: 3333 });
+            console.log('=========== Servidor rodando em http://localhost:3333 ==============');
+        } catch (err) {
+            app.log.error(err);
+            process.exit(1);
+        }
+    };
 
 start();

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios, { AxiosError } from 'axios';
 import './App.css';
 import type { Laudo } from './types';
+import { useLaudoPrevia} from './hooks/useLaudos';
 
 interface Amostra {
   id: string;
@@ -14,9 +15,8 @@ function App() {
   const [amostras, setAmostras] = useState<Amostra[]>([]);
   const [selecionadaId, setSelecionadaId] = useState<string | null>(null);
   const [observacoes, setObservacoes] = useState('');
-  
-  const [laudo, setLaudo] = useState<Laudo | null>(null);
-  const [loadingLaudo, setLoadingLaudo] = useState(false);
+
+  const { laudo, loading: loadingLaudo, erro } = useLaudoPrevia(selecionadaId, observacoes);
 
   useEffect(() => {
     carregarAmostras();
@@ -32,13 +32,10 @@ function App() {
   };
 
   const buscarLaudoSalvo = async (id: string) => {
-    setLoadingLaudo(true);
-    setLaudo(null);
     setObservacoes('');
 
     try {
       const res = await axios.get<Laudo>(`http://localhost:3333/reports/${id}`);
-      setLaudo(res.data);
       setObservacoes(res.data.notes);
       
     } catch (error) { 
@@ -49,8 +46,6 @@ function App() {
       } else {
         console.error("Erro ao buscar laudo salvo", error);
       }
-    } finally {
-      setLoadingLaudo(false);
     }
   };
 
@@ -81,25 +76,6 @@ function App() {
     } catch (error) {
       console.error(error);
       alert("Erro ao criar amostra.");
-    }
-  };
-
-  const handleGerarPrevia = async () => {
-    if (!selecionadaId) return;
-    setLoadingLaudo(true);
-    setLaudo(null);
-
-    try {
-      const res = await axios.post<Laudo>('http://localhost:3333/reports/previa', {
-        sampleId: selecionadaId,
-        notes: observacoes
-      });
-      setLaudo(res.data);
-    } catch (error) {
-      console.error(error);
-      alert("Erro ao gerar prévia.");
-    } finally {
-      setLoadingLaudo(false);
     }
   };
 
@@ -166,19 +142,19 @@ function App() {
                 placeholder="Observações clínicas..."
               />
               
-              <div style={{display: 'flex', gap: '10px'}}>
-                <button className="btn" onClick={handleGerarPrevia} disabled={loadingLaudo}>
-                  {loadingLaudo ? 'Carregando...' : 'Gerar Prévia'}
-                </button>
+              <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
+                 {loadingLaudo && <span style={{color: '#888', fontSize: '0.9em'}}>Calculando prévia</span>}
+  
+                {erro && <span style={{color: '#e74c3c', fontSize: '0.9em'}}>{erro}</span>}
 
-                {laudo && (
-                    <button 
-                        className="btn" 
-                        style={{backgroundColor: '#28a745'}} 
-                        onClick={handleSalvarLaudo}
-                    >
-                        Salvar
-                    </button>
+                {laudo && !loadingLaudo && (
+                  <button 
+                    className="btn" 
+                    style={{backgroundColor: '#28a745'}} 
+                    onClick={handleSalvarLaudo}
+                  >
+                    Salvar Laudo
+                  </button>
                 )}
               </div>
             </div>

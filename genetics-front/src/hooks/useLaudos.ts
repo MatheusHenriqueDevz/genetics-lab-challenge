@@ -10,12 +10,21 @@ export const useLaudoPrevia = (sampleId: string | null, observacoes: string) => 
     const [erro, setErro] = useState<string | null>(null);
 
     useEffect(() => {
+        const controller = new AbortController();
+
         if (!sampleId) {
             setLaudo(null);
             return;
         }
 
-        const controller = new AbortController();
+        const timeDelay = setTimeout(() => {
+            carregar();
+        }, 500);
+
+        return () => {
+            clearTimeout(timeDelay);
+            controller.abort();
+        }
         
         const carregar = async () => {
             setLoading(true);
