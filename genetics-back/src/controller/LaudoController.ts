@@ -9,7 +9,7 @@ export class LaudoController {
         try {
             const { sampleId, notes } = request.body as { sampleId: string, notes: string };
             
-            if (!sampleId) {
+            if (!sampleId) 
                 return reply.status(400).send({ error: 'sampleId é obrigatório' });
             }
 
